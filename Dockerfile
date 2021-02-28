@@ -1,12 +1,11 @@
 FROM centos:7
 
-LABEL org.opencontainers.image.source="https://github.com/giovtorres/slurm-docker-cluster" \
+LABEL org.opencontainers.image.source="https://github.com/devinchristianson/slurm-docker-cluster" \
       org.opencontainers.image.title="slurm-docker-cluster" \
       org.opencontainers.image.description="Slurm Docker cluster on CentOS 7" \
-      org.label-schema.docker.cmd="docker-compose up -d" \
-      maintainer="Giovanni Torres"
+      maintainer="Devin Christianson"
 
-ARG SLURM_TAG=slurm-19-05-1-2
+ARG SLURM_TAG=slurm-18-08-8-1
 ARG GOSU_VERSION=1.11
 
 RUN set -ex \
@@ -85,8 +84,9 @@ RUN set -x \
 
 COPY slurm.conf /etc/slurm/slurm.conf
 COPY slurmdbd.conf /etc/slurm/slurmdbd.conf
-
+RUN yum -y install openssh-server mailx
+COPY mail.rc /etc/mail.rc
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
-
+RUN echo root:testing | chpasswd
 CMD ["slurmdbd"]

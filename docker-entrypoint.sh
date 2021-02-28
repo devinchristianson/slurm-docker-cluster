@@ -34,7 +34,8 @@ then
         sleep 2
     done
     echo "-- slurmdbd is now active ..."
-
+    echo "-- starting SSH Server --"
+    /usr/bin/ssh-keygen -A && /usr/sbin/sshd -D &
     echo "---> Starting the Slurm Controller Daemon (slurmctld) ..."
     exec gosu slurm /usr/sbin/slurmctld -Dvvv
 fi
